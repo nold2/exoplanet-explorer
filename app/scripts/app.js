@@ -1,10 +1,10 @@
 /*
 Instructions:
-(1) Rewrite get with the Fetch API: https://davidwalsh.name/fetch
-(2) Finish the getJSON method. getJSON should take a URL and return the parsed JSON response.
-  (a) getJSON needs to return a Promise!
-(3) Test by console.logging the response and by passing the query string from getJSON to addSearchHeader.
-(4) Handle errors by passing "unknown" to addSearchHeader.
+(1) Get the planet data and add the search header.
+(2) Create the first thumbnail with createPlanetThumb(data)
+(3) Handle errors!
+  (a) Pass 'unknown' to the search header.
+  (b) console.log the error.
  */
 
 // Inline configuration for jshint below. Prevents `gulp jshint` from failing with quiz starter code.
@@ -24,18 +24,26 @@ Instructions:
   }
 
   /**
-   * XHR wrapped in a Promise using Fetch.
+   * Helper function to create a planet thumbnail.
+   * @param  {Object} data - The raw data describing the planet.
+   */
+  function createPlanetThumb(data) {
+    var pT = document.createElement('planet-thumb');
+    for (var d in data) {
+      pT[d] = data[d];
+    }
+    home.appendChild(pT);
+  }
+
+  /**
+   * XHR wrapped in a promise
    * @param  {String} url - The URL to fetch.
    * @return {Promise}    - A Promise that resolves when the XHR succeeds and fails otherwise.
    */
   function get(url) {
-    /*
-    Use the Fetch API to GET a URL.
-    Return the fetch.
-
-    Your code goes here!
-     */
-    return window.fetch(url, { method: 'get'})
+    return fetch(url, {
+      method: 'get'
+    });
   }
 
   /**
@@ -65,22 +73,21 @@ Instructions:
   window.addEventListener('WebComponentsReady', function() {
     home = document.querySelector('section[data-route="home"]');
     /*
-    Uncomment the next line when you're ready to test!
-    Don't forget to chain with a .then and a .catch!
+    Uncomment the next line and start here when you're ready to add the first thumbnail!
 
-    Your code goes here too!
+    Your code goes here!
      */
     getJSON('../data/earth-like-results.json')
       .then(
         function(res){
           addSearchHeader(res.query)
           console.log(res)
-          return res.results[0]
+          return res
         }
       )
       .then(
         function(res){
-          console.log(res)
+          createPlanetThumb(res.data)
         }
       )
       .catch(
