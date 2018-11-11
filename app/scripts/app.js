@@ -81,15 +81,13 @@ Instructions:
       .then(
         function(res){
           addSearchHeader(res.query)
-          console.log(res)
-          return res
+          return getJSON(res.results[0])
         }
       )
-      .then(
-        function(res){
-          createPlanetThumb(res.data)
-        }
-      )
+      .catch(function(){
+        throw Error('Search Request Error');
+      })
+      .then(createPlanetThumb)
       .catch(
         function(error){
           addSearchHeader('unknown')
